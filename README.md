@@ -2,52 +2,52 @@
 #include<unistd.h>
 #include<pthread.h>
 #include<semaphore.h>
-sem_t mutex;
-pthread_t t1, t2;
-void f2()
+sem_t s;
+pthread_t T1, T2;
+void *f2()
 {
 printf("\nF2 called"); 
 }
-void f1()
+void *f1()
 {
 printf("\nF1 called"); 
-pthread_create(&t2, NULL, f2, NULL);
+pthread_create(&T2, NULL, f2, NULL);
 }
-void fa()
+void *fa()
 {
-sem_wait(&mutex);
+sem_wait(&s);
 printf("\nThread for fa Entered"); 
-sleep(2);
+sleep(1);
 printf("\nThread For fa Done"); 
-sem_post(&mutex);
+sem_post(&s);
 }
-void fb()
+void *fb()
 {
-sem_wait(&mutex);
+sem_wait(&s);
 printf("\nThread For fb Entered"); 
-sleep(2);
+sleep(1);
 printf("\nFunction fb Thread Done");  
-sem_post(&mutex);
+sem_post(&s);
 }
-void fc()
+void *fc()
 {
-sem_wait(&mutex);
+sem_wait(&s);
 printf("\nThread for fc Entered ");  
-sleep(2);
+sleep(1);
 printf("\nThread Function fc Done ");  
-sem_post(&mutex);
+sem_post(&s);
 }
 int main()
 {
-sem_init(&mutex, 3, 1); 
-pthread_create(&t1, NULL, f1, NULL); 
-sleep(4);
-pthread_create(&t2, NULL, fa, NULL);  
-sleep(4);
-pthread_create(&t1, NULL, fb, NULL);  
+sem_init(&s, 3, 1); 
+pthread_create(&T1, NULL, f1, NULL); 
 sleep(3);
-pthread_create(&t2, NULL, fc, NULL);  
-pthread_join(t1, NULL);
-pthread_join(t2, NULL);
+pthread_create(&T2, NULL, fa, NULL);  
+sleep(3);
+pthread_create(&T1, NULL, fb, NULL);  
+sleep(2);
+pthread_create(&T2, NULL, fc, NULL);  
+pthread_join(T1, NULL);
+pthread_join(T2, NULL);
 printf("\nThreads Executed Successfully");  
 }
